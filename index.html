@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataZenX | Enhanced Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+
+        :root {
+            --primary-color: #00ff88;
+            --background-color: #000;
+            --text-color: #eee;
+            --card-bg: rgba(0, 255, 136, 0.05);
+            --card-shadow: rgba(0, 255, 136, 0.3);
+            --border-color: #00ff88;
+            --hover-color: lime;
+            --hover-bg: #00ff88;
+            --hover-text: #000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth; /* Enables smooth scrolling */
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scrollbar from particles */
+        }
+
+        /* --- Particle Background --- */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Place behind content */
+            background-color: var(--background-color);
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            padding: 50px 20px 30px 20px; /* Increased top padding */
+            position: relative; /* Needed for z-index if overlapping particles */
+            z-index: 1;
+            min-height: 150px; /* Ensure space for typewriter */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: var(--primary-color);
+            text-shadow: 0 0 15px var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* --- Typewriter Styling --- */
+        .typewriter {
+            font-size: 1.2em;
+            color: var(--primary-color);
+            min-height: 1.5em; /* Prevent layout shift */
+        }
+
+        .typewriter span {
+            border-right: 3px solid var(--primary-color);
+            white-space: nowrap;
+            /* overflow: hidden; No longer needed as JS handles text */
+            display: inline-block; /* Important for border cursor */
+            padding-right: 2px; /* Space for cursor */
+            animation: blink .75s step-end infinite;
+            vertical-align: bottom; /* Align cursor properly */
+        }
+
+        /* Blinking cursor animation */
+        @keyframes blink {
+             0%, 100% { border-color: var(--primary-color); }
+             50% { border-color: transparent; }
+        }
+
+
+        /* --- Navigation --- */
+        nav {
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
+            backdrop-filter: blur(5px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 0;
+            text-align: center;
+            position: sticky; /* Make it sticky */
+            top: 0; /* Stick to the top */
+            z-index: 1000; /* Ensure it's above other content */
+            transition: top 0.3s ease-in-out;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: inline-block;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1em;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active { /* Style for hover and active link */
+            color: var(--hover-text);
+            background-color: var(--hover-bg);
+            text-shadow: 0 0 5px var(--hover-text);
+        }
+
+        /* --- Main Content --- */
+        main {
+            max-width: 900px; /* Slightly wider */
+            margin: 40px auto 20px auto; /* Adjusted margins */
+            padding: 0 20px;
+            position: relative; /* Needed for z-index */
+            z-index: 1;
+        }
+
+        /* --- Section Styling & Scroll Animation --- */
+        section {
+            padding: 40px 20px; /* Increased padding */
+            margin-bottom: 40px;
+            background: var(--card-bg);
+            border-left: 5px solid var(--border-color);
+            box-shadow: 0 0 15px var(--card-shadow);
+            border-radius: 8px; /* Rounded corners */
+            opacity: 0; /* Initially hidden for animation */
+            transform: translateY(20px); /* Start slightly lower */
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Animation transition */
+        }
+
+        section.visible {
+             opacity: 1; /* Fade in */
+             transform: translateY(0); /* Move up */
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 1px dashed var(--primary-color);
+            padding-bottom: 10px;
+            display: inline-block; /* Make border only wrap text */
+        }
+
+        /* --- Skills Section --- */
+        #skills {
+            border-left-color: #ff6347; /* Different accent color? */
+        }
+
+        .skill-item { margin-bottom: 20px; }
+        .skill-label { font-weight: bold; margin-bottom: 8px; display: block; color: var(--text-color); }
+
+        .progress-bar-container {
+            background-color: #222; /* Darker grey */
+            border-radius: 5px;
+            height: 12px; /* Slightly thicker */
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, rgba(0,255,136,0.7) 0%, rgba(0,255,136,1) 100%); /* Gradient */
+            height: 100%;
+            border-radius: 5px;
+            width: 0%; /* Initial width */
+            transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1); /* Smoother transition */
+            position: relative;
+            overflow: hidden;
+        }
+        /* Optional: Add a subtle shine effect to progress bar */
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: translateX(-100%);
+            animation: shine 2s infinite linear;
+        }
+        @keyframes shine { to { transform: translateX(100%); } }
+
+
+        /* --- Projects Section (Cards) --- */
+        #projects { border-left-color: #47d1ff; } /* Another accent color */
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            gap: 25px; /* Space between cards */
+            margin-top: 20px;
+        }
+
+        .project-card {
+            background: rgba(0, 0, 0, 0.3); /* Darker card background */
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex; /* Added for better content alignment if needed */
+            flex-direction: column; /* Stack content vertically */
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px); /* Lift effect */
+            box-shadow: 0 8px 25px var(--card-shadow);
+        }
+
+        .project-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .project-card p {
+            font-size: 0.95em;
+            color: var(--text-color);
+            flex-grow: 1; /* Allow paragraph to take available space */
+            margin-bottom: 15px; /* Add space before potential links */
+        }
+         /* Optional: Add link styling within cards */
+        .project-card a {
+            color: var(--primary-color);
+            text-decoration: underline;
+            font-weight: bold;
+            margin-top: auto; /* Push link to bottom if card heights vary */
+        }
+        .project-card a:hover {
+            color: var(--hover-color);
+        }
+
+
+        /* --- Interactive Section --- */
+        #interactive { border-left-color: #ffdb47; } /* Yellow accent */
+
+        button {
+            background-color: transparent;
+            border: 2px solid var(--border-color);
+            padding: 12px 25px; /* Larger padding */
+            color: var(--border-color);
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s, transform 0.2s;
+            font-size: 1em;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: var(--hover-bg);
+            color: var(--hover-text);
+            transform: scale(1.05); /* Slight scale effect */
+        }
+
+        #quote {
+            margin-top: 25px;
+            font-weight: bold;
+            font-style: italic;
+            color: var(--text-color);
+            min-height: 1.6em; /* Prevent layout shift when quote appears */
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0; /* Start hidden */
+        }
+        #quote.visible {
+             opacity: 1; /* Fade in */
+        }
+
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            padding: 30px 20px;
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #aaa;
+            position: relative; /* Needed for z-index */
+            z-index: 1;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s;
+            margin: 0 8px; /* Space around links */
+        }
+
+        footer a:hover { color: var(--hover-color); }
+        footer i { margin-right: 5px; } /* Space between icon and text */
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            h2 { font-size: 1.8em; }
+            nav ul li { margin: 0 10px; }
+            nav ul li a { font-size: 0.9em; }
+            main { padding: 0 15px; }
+            section { padding: 30px 15px; }
+            .project-grid { grid-template-columns: 1fr; /* Stack cards on smaller screens */ }
+        }
+
+         @media (max-width: 480px) {
+            h1 { font-size: 2em; }
+            .typewriter { font-size: 1em; }
+            nav { padding: 8px 0; }
+            nav ul li { margin: 0 5px; }
+            nav ul li a { padding: 4px 8px; }
+            button { padding: 10px 20px; font-size: 0.9em; }
+         }
+
+    </style>
+</head>
+
+<body>
+    <div id="particles-js"></div>
+
+    <header>
+        <h1>Welcome to DataZenX's Portfolio</h1>
+        <div class="typewriter"><span id="typewriter-text"></span></div>
+    </header>
+
+    <nav id="navbar">
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#interactive">Interactive</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="about" class="scroll-section">
+            <h2>Who Am I?</h2>
+            <p>I'm <strong>DataZenX</strong>, a multifaceted individual exploring the realms of code, visual editing, creative writing, and the vast universe of data science. My passions are deeply rooted in technology, the captivating narratives of anime, the intricacies of psychology, and the art of world-building.</p>
+            <p>Driven by curiosity and a belief in the power of science and logic.</p>
+        </section>
+
+        <section id="skills" class="scroll-section">
+            <h2>Skills Showcase</h2>
+            <p>Here's a visual representation of my current skill levels and areas of interest:</p>
+            <div class="skill-item">
+                <label for="python" class="skill-label">Python Programming (Data Analysis, Automation)</label>
+                <div class="progress-bar-container">
+                    <div id="python" class="progress-bar" data-progress="75"></div>
+                </div>
+            </div>
+            <div class="skill-item">
+                <label for="video-editing" class="skill-label">Video Editing (CapCut, After Effects Basics)</label>
+                <div class="progress-bar-container">
+                    <div id="video-editing" class="progress-bar" data-progress="85"></div>
+                </div>
+            </div>
+            <div class="skill-item">
+                <label for="writing" class="skill-label">Creative Writing (Sci-Fi, Animation Concepts)</label>
+                <div class="progress-bar-container">
+                    <div id="writing" class="progress-bar" data-progress="90"></div>
+                </div>
+            </div>
+             <div class="skill-item">
+                <label for="web-dev" class="skill-label">Web Development (HTML, CSS, Basic JS)</label>
+                <div class="progress-bar-container">
+                    <div id="web-dev" class="progress-bar" data-progress="50"></div>
+                </div>
+            </div>
+            <div class="skill-item">
+                <label for="data-science" class="skill-label">Data Science & Analytics (Learning Path)</label>
+                <div class="progress-bar-container">
+                    <div id="data-science" class="progress-bar" data-progress="35"></div>
+                </div>
+            </div>
+            <div class="skill-item">
+                <label for="geopolitics" class="skill-label">Geopolitics & Astronomy (Keen Interest)</label>
+                <div class="progress-bar-container">
+                    <div id="geopolitics" class="progress-bar" data-progress="60"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="scroll-section">
+            <h2>Project Highlights</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <h3>Time Machine Animation Concept</h3>
+                    <p>Developing a narrative and world for a sci-fi animation story. Focuses on using scientific principles to combat challenges in a post-apocalyptic setting. Explores themes of hope, ingenuity, and consequence.</p>
+                    </div>
+                <div class="project-card">
+                    <h3>Senku Cola Recreation</h3>
+                    <p>A hands-on experiment inspired by Dr. Stone. Successfully recreated the iconic Senku Cola using basic ingredients and chemical principles. Documented the process and results (video edit).</p>
+                    </div>
+                 <div class="project-card">
+                    <h3>Portfolio Website V2</h3>
+                    <p>This very website! Iteratively built using HTML, CSS, and JavaScript. Implemented features like particle backgrounds, scroll animations, and interactive elements to showcase web development skills.</p>
+                     </div>
+                 <div class="project-card">
+                    <h3>[Future Project Placeholder]</h3>
+                    <p>Planning a data analysis project focusing on [mention a topic, e.g., anime viewing trends or a simple scientific dataset]. Aiming to apply Python libraries like Pandas and Matplotlib.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="interactive" class="scroll-section">
+            <h2>Interactive Console</h2>
+            <p>Engage with the DataZenX terminal. Click the button below for a byte of scientific inspiration 👇</p>
+            <button onclick="showQuote()">Generate Quote</button>
+            <p id="quote"></p> </section>
+    </main>
+
+    <footer>
+        <p>Crafted with <i class="fas fa-atom" style="color: var(--primary-color);"></i> by DataZenX |
+            <a href="#" target="_blank" title="GitHub Profile"><i class="fab fa-github"></i>GitHub</a> |
+            <a href="#" target="_blank" title="LinkedIn Profile"><i class="fab fa-linkedin"></i>LinkedIn</a> |
+            <span id="currentYear"></span> </p>
+     </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        // --- Particle.js Configuration ---
+        // (Checks if particlesJS exists before running to avoid errors if CDN fails)
+        if (typeof particlesJS !== 'undefined') {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#00ff88" },
+                    "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" }, "polygon": { "nb_sides": 5 } },
+                    "opacity": { "value": 0.5, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
+                    "size": { "value": 3, "random": true, "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false } },
+                    "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.4, "width": 1 },
+                    "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 } }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+                    "modes": { "grab": { "distance": 400, "line_linked": { "opacity": 1 } }, "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 }, "repulse": { "distance": 100, "duration": 0.4 }, "push": { "particles_nb": 4 }, "remove": { "particles_nb": 2 } }
+                },
+                "retina_detect": true
+            });
+        } else {
+            console.error("particles.js library not loaded.");
+        }
+
+
+        // --- Random Quotes ---
+        const quotes = [
+             "With the power of science, anything's possible! - Senku Ishigami",
+             "10 billion percent certain! - Senku Ishigami",
+             "Science is way more interesting than magic. - Mark Rober",
+             "Birds born in a cage think flying is an illness. - Alejandro Jodorowsky",
+             "The important thing is to never stop questioning. - Albert Einstein",
+             "Somewhere, something incredible is waiting to be known. - Carl Sagan",
+             "Look up at the stars and not down at your feet. - Stephen Hawking"
+        ];
+        const quoteElement = document.getElementById("quote");
+
+        function showQuote() {
+            if (quoteElement) {
+                const index = Math.floor(Math.random() * quotes.length);
+                quoteElement.style.opacity = 0; // Fade out previous quote
+                setTimeout(() => {
+                    quoteElement.textContent = `"${quotes[index]}"`;
+                    quoteElement.classList.add('visible'); // Add class to trigger fade-in CSS
+                }, 300); // Wait slightly longer than CSS transition
+            }
+        }
+
+        // --- Wait for DOM to be Ready ---
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // --- Looping Typewriter Effect ---
+            const typewriterElement = document.getElementById('typewriter-text');
+            if (typewriterElement) { // Check if element exists
+                const phrases = [ // Add your desired phrases here
+                    "Science is cooler than magic 💡",
+                    "Exploring code and data.",
+                    "Building worlds, one line at a time.",
+                    "Passionate about technology & anime.",
+                    "Future Data Scientist."
+                ];
+                let phraseIndex = 0;
+                let charIndex = 0;
+                let isDeleting = false;
+                const typingSpeed = 100; // milliseconds per character
+                const erasingSpeed = 50;  // milliseconds per character
+                const pauseBeforeErase = 2000; // milliseconds to pause after typing
+                const pauseBeforeType = 500;  // milliseconds to pause after erasing
+
+                function typeWriterLoop() {
+                     // Ensure element still exists in case of dynamic page changes (though unlikely here)
+                    if (!typewriterElement) return;
+
+                    const currentPhrase = phrases[phraseIndex];
+                    let typeDelay = typingSpeed;
+
+                    if (isDeleting) {
+                        // --- Erasing ---
+                        typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                        charIndex--;
+                        typeDelay = erasingSpeed;
+
+                        if (charIndex === 0) {
+                            // Finished erasing
+                            isDeleting = false;
+                            phraseIndex = (phraseIndex + 1) % phrases.length; // Move to next phrase (loop)
+                            typeDelay = pauseBeforeType; // Pause before typing next
+                        }
+                    } else {
+                        // --- Typing ---
+                        typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                        charIndex++;
+
+                        if (charIndex === currentPhrase.length) {
+                            // Finished typing current phrase
+                            isDeleting = true;
+                            typeDelay = pauseBeforeErase; // Pause before erasing
+                        }
+                    }
+                    setTimeout(typeWriterLoop, typeDelay);
+                } // end typeWriterLoop function
+
+                // Start the typewriter loop after a short delay
+                setTimeout(typeWriterLoop, 1000);
+
+            } else {
+                 console.error("Typewriter text element not found.");
+            }
+
+
+            // --- Progress Bars & Scroll Animations Logic ---
+            const progressBars = document.querySelectorAll('.progress-bar');
+            const skillsSection = document.querySelector('#skills');
+            const sections = document.querySelectorAll('.scroll-section');
+            const navLinks = document.querySelectorAll('nav ul li a');
+            let skillsAnimated = false; // Flag to ensure skills animate only once
+
+            const animateProgressBars = () => {
+                 if (skillsAnimated) return; // Don't re-animate
+                 progressBars.forEach(bar => {
+                    const progress = bar.dataset.progress;
+                    // Small delay before starting animation
+                    setTimeout(() => {
+                        bar.style.width = progress + '%';
+                    }, 200);
+                 });
+                 skillsAnimated = true; // Set flag after animating
+            };
+
+            // Intersection Observer for Sections (Fade-in & Skills Animation & Active Nav)
+            if ("IntersectionObserver" in window) {
+                const sectionObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Add visible class for fade-in animation
+                            entry.target.classList.add('visible');
+
+                            // Trigger skill animation only when skills section is visible
+                            if (entry.target.id === 'skills') {
+                                animateProgressBars();
+                            }
+
+                            // Active Nav Link Highlighting
+                            navLinks.forEach(link => {
+                                link.classList.remove('active');
+                                // Check if href matches the section ID, ensuring href exists
+                                if (link.getAttribute('href') === `#${entry.target.id}`) {
+                                    link.classList.add('active');
+                                }
+                            });
+
+                        }
+                        // Optional: Remove 'visible' class when scrolling out of view if you want animations to re-trigger
+                        // else {
+                        //     entry.target.classList.remove('visible');
+                        // }
+                    });
+                }, { threshold: 0.15 }); // Trigger when 15% of the section is visible
+
+                sections.forEach(section => {
+                    sectionObserver.observe(section);
+                });
+            } else {
+                // Fallback for browsers without IntersectionObserver (optional: just show all sections)
+                 console.warn("IntersectionObserver not supported. Scroll animations disabled.");
+                 sections.forEach(section => section.style.opacity = 1);
+                 animateProgressBars(); // Animate skills immediately if no observer
+            }
+
+            // Set current year in footer
+            const yearSpan = document.getElementById('currentYear');
+            if (yearSpan) {
+                yearSpan.textContent = `© ${new Date().getFullYear()}`;
+            }
+
+        }); // --- End DOMContentLoaded ---
+    </script>
+</body>
+
+</html>
